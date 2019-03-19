@@ -1,0 +1,36 @@
+version: '3'
+services:
+
+  db:
+    container_name: db
+    image: postgres:11.1
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: 
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - cleanreactnet
+    ports:
+      - "5432:5432"
+
+  web:
+    container_name: web
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./src/frontend-app:/usr/local/code
+      - /usr/local/code/node_modules
+    networks:
+      - cleanreactnet
+    ports:
+        - "3000:3000"
+    command:
+        npm run start
+
+volumes:
+  pgdata:
+
+networks:
+    cleanreactnet:
